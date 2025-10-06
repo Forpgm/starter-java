@@ -1,7 +1,6 @@
 package com.example.person_service.service;
 
 import com.example.person_service.dto.request.CreatePersonRequest;
-import com.example.person_service.dto.response.ApiResponse;
 import com.example.person_service.dto.response.CreatePersonResponse;
 import com.example.person_service.entity.Person;
 import com.example.person_service.exception.AppException;
