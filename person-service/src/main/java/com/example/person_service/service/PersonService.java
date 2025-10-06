@@ -33,7 +33,20 @@ public class PersonService {
         // trả age thay vì dob
         var age = calculateAge.calculateAge(request.getDob());
         return CreatePersonResponse.builder().id(person.getId()).firstName(request.getFirstName()).lastName(request.getLastName()).age(age).taxNumber(request.getTaxNumber()).build();
+    }
 
+    public CreatePersonResponse findByTaxNumber(String taxNumber) {
+        Person person = personRepository.findByTaxNumber(taxNumber)
+                .orElseThrow(() -> new AppException(new ErrorCode(HttpStatus.NOT_FOUND.value(), "Person not found")));
+
+        var age = calculateAge.calculateAge(person.getDob());
+        return CreatePersonResponse.builder()
+                .id(person.getId())
+                .firstName(person.getFirstName())
+                .lastName(person.getLastName())
+                .age(age)
+                .taxNumber(person.getTaxNumber())
+                .build();
     }
 
 }
