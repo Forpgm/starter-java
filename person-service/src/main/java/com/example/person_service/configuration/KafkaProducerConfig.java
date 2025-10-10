@@ -1,5 +1,4 @@
 package com.example.person_service.configuration;
-
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +13,6 @@ import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfig {
-
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {

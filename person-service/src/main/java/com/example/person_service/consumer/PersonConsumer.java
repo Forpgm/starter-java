@@ -3,13 +3,14 @@ package com.example.person_service.consumer;
 import com.example.person_service.dto.request.CreatePersonRequest;
 import com.example.person_service.dto.request.UpdatePersonRequest;
 import com.example.person_service.entity.Person;
+import com.example.person_service.exception.AppException;
+import com.example.person_service.exception.ErrorCode;
 import com.example.person_service.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -29,12 +30,15 @@ public class PersonConsumer {
         personRepository.save(person);
         System.out.println("Created person: " + person.getFirstName());
     }
+
     @KafkaHandler
     public void handleUpdate(UpdatePersonRequest dto) {
         System.out.println("Received UpdatePersonRequest: " + dto);
 
         try {
-            Person person = personRepository.findById(UUID.fromString(dto.getId())).orElse(null);
+            Person person =
+                    personRepository.findById(UUID.fromString(dto.getId())).orElseThrow(() -> new AppException(new ErrorCode(404,
+                            "Person not found")));
 
             if (dto.getFirstName() != null) person.setFirstName(dto.getFirstName());
             if (dto.getLastName() != null) person.setLastName(dto.getLastName());
@@ -49,7 +53,6 @@ public class PersonConsumer {
             System.out.println(e.getMessage());
         }
     }
-
 
 
     // Bắt các message không khớp
